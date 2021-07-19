@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchFilter from "./components/SearchFilter";
 import PersonForm from "./components/PersonForm";
 import RenderAllPeople from "./components/RenderAllPeople";
+import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
   const [filterResult, setFilterResult] = useState("");
+
+  useEffect(() => {
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response => setPersons(response.data))
+  }, [])
+
 
   const handleFilter = (event) => {
     const filter = persons.filter((person) =>
@@ -14,6 +22,7 @@ const App = () => {
     );
     setFilterResult(filter);
   };
+  
   const handleChange = (event) => {
     setNewPerson({ ...newPerson, [event.target.name]: event.target.value });
   };
