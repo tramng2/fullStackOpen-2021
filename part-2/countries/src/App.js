@@ -17,6 +17,10 @@ const App = () => {
     );
     setFindResult(filter);
   };
+  const handleClick = (country) => {
+    setFindResult([country])
+  }
+  
   const countrySearchRender = () => {
     if (findResult.length > 10)
       return <p>Too many matches, secify another filter</p>;
@@ -32,7 +36,10 @@ const App = () => {
       return (
         <ul>
           {findResult.map((el, index) => (
-            <p>{el.name}</p>
+            <div>
+              <span>{el.name}</span>
+              <button onClick={() => handleClick(el)}>show</button>
+            </div>
           ))}
         </ul>
       );
