@@ -1,14 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 
-function CountriesInfo({country}) {
-    const api_key = process.env.REACT_APP_API_KEY
-    const [weather, setWeather] = useState('')
-    useEffect(() => {
-        axios
-        .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`)
-        .then((response) => setWeather(response.data.current));
-      }, [api_key, country])
+function CountriesInfo({country, weather}) {
     return (
         <div>
             <h2>{country.name}</h2>
