@@ -10,7 +10,7 @@ const App = () => {
   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
   const [filterResult, setFilterResult] = useState("");
   const [message, setMessage] = useState(null);
-  const [messageContent, setMessageContent] = useState(null);
+  const [messageType, setMessageType] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((response) => setPersons(response));
@@ -49,7 +49,7 @@ const App = () => {
                 })
               );
               setMessage(`Changed ${newPersonObject.name}`);
-              setMessageContent("noti");
+              setMessageType("noti");
               setTimeout(() => {
                 setMessage(null);
               }, 3000);
@@ -57,15 +57,24 @@ const App = () => {
         }
         setNewPerson({ name: "", number: "" });
       } else {
-        personService.create(newPersonObject).then((returnedPerson) => {
-          setPersons([...persons, returnedPerson]);
-          setNewPerson({ name: "", number: "" });
-          setMessage(`Added ${newPersonObject.name}`);
-          setMessageContent("noti");
-          setTimeout(() => {
-            setMessage(null);
-          }, 3000);
-        });
+        personService
+          .create(newPersonObject)
+          .then((returnedPerson) => {
+            setPersons([...persons, returnedPerson]);
+            setNewPerson({ name: "", number: "" });
+            setMessage(`Added ${newPersonObject.name}`);
+            setMessageType("noti");
+            setTimeout(() => {
+              setMessage(null);
+            }, 3000);
+          })
+          .catch((error) => {
+            setMessage(`${error.response.data.error}`);
+            setMessageType("error");
+            setTimeout(() => {
+              setMessage(null);
+            }, 3000);
+          });
       }
     }
   };
@@ -82,7 +91,7 @@ const App = () => {
           setMessage(
             `Information of ${personDeleting.name} has already been removed from server`
           );
-          setMessageContent("error");
+          setMessageType("error");
           setTimeout(() => {
             setMessage(null);
           }, 3000);
@@ -94,7 +103,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <SearchFilter person={persons} handleFilter={handleFilter} />
-      <Notification message={message} content={messageContent} />
+      <Notification message={message} type={messageType} />
 
       <h2>Add a new</h2>
       <PersonForm
