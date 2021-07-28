@@ -9,8 +9,9 @@
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../part-2/phone-book && npm run build && cp -r build /Users/tram/Desktop/Mooc/part-3",
     "deploy": "cd .. && git subtree push --prefix part-3 heroku master",
-    "deploy:full": "git add . && git commit -m uibuild && git push origin master && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "deploy:full": "npm run build:ui && git add --a && git commit -m uibuild && git push origin master && npm run deploy",
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.31.0",
     "nodemon": "^2.0.12"
   }
 }
