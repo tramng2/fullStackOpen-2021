@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build:ui": "rm -rf build && cd ../part-2 && npm run build --prod && cp -r build /Users/tram/Desktop/Mooc/part-3",
+    "build:ui": "rm -rf build && cd ../part-2 && npm run build && cp -r build /Users/tram/Desktop/Mooc/part-3",
     "deploy": "cd .. && git subtree push --prefix part-3 heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs --tail"
