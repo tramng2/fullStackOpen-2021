@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars */
+const _ = require('lodash')
+const reducer = (accumulator, currentValue) => accumulator > currentValue ? accumulator : currentValue
 const dummy = (array) => {
   return 1
 }
@@ -8,11 +9,34 @@ const totalLikes = (blogList) => {
   return totalLikes
 }
 
-const favoriteBlog = (blogList) => {
-  const reducer = (accumulator, currentValue) => accumulator > currentValue ? accumulator : currentValue
-  const mostLikes = blogList.map(blog => blog.likes).reduce(reducer)
-  return mostLikes
+const favoriteBlog = blogs => {
+  return blogs.reduce((a, b) => (a.likes > b.likes ? a : b))
 }
+
+const mostBlog = (blogList) => {
+  let countBlog = _.countBy(blogList, (item) => {
+    return item.author
+  })
+  countBlog = _.toPairs(countBlog)
+  const blogArray = countBlog.map(item => {return {author: item[0], blog: item[1]}})
+  const mostBlog = _.maxBy(blogArray, 'blog')
+  return mostBlog
+}
+const authorMostLikes = (blogList) => {
+  const result = blogList.reduce((a, b) => {
+    let known = a.find(found => {
+      return found.author === b.author
+    })
+    if (!known) {
+      return a.concat({ author: b.author, likes: b.likes })
+    }
+    known.likes += b.likes
+    return a
+  }, [])
+  return favoriteBlog(result)
+  
+}
+  
 module.exports = {
-  dummy, totalLikes, favoriteBlog
+  dummy, totalLikes, favoriteBlog, mostBlog, authorMostLikes
 }
