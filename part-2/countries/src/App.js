@@ -4,13 +4,14 @@ import CountriesInfo from "./components/CountriesInfo.js";
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [findResult, setFindResult] = useState([]);
-
+  
   useEffect(() => {
     axios
       .get("https://restcountries.eu/rest/v2/all")
       .then((response) => setCountries(response.data));
   }, []);
 
+ 
   const handleFilter = (event) => {
     const filter = countries.filter((country) =>
       country.name.toLowerCase().includes(event.target.value)
