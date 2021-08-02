@@ -1,6 +1,6 @@
 const _ = require('lodash')
-const reducer = (accumulator, currentValue) => accumulator > currentValue ? accumulator : currentValue
-const dummy = (array) => {
+
+const dummy = () => {
   return 1
 }
 const totalLikes = (blogList) => {

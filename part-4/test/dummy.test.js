@@ -138,11 +138,11 @@ describe('most likes', () => {
     }
   ]
   test('most likes among many blogs', () => {
-    const result = listHelper.favoriteBlog(blogs)
+    const result = listHelper.favoriteBlog(blogs).likes
     expect(result).toBe(12)
   })
   test('when list has only one blog, equals the likes of that', () => {
-    const result = listHelper.favoriteBlog(listWithOneBlog)
+    const result = listHelper.favoriteBlog(listWithOneBlog).likes
     expect(result).toBe(5)
   })
   test('author has most likes', () => {
