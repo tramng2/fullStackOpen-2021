@@ -5,7 +5,6 @@ const app = require('../app')
 const api = supertest(app)
 const helper = require('./test_helper')
 const Blog = require('../models/blogSchema')
-const { response } = require('../app')
 
 //makesure that database is the same before each test is run
 
@@ -16,7 +15,6 @@ beforeEach(async () => {
     await blogObject.save()
   }
 })
-
 test('get all blog by GET request', async () => {
   await api
     .get('/api/blogs')
@@ -78,6 +76,32 @@ test('verify if title and url property is missing', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test('deleting a single blog post', async () => {
+  const blogListStart = await helper.blogsInDb()
+  const deleteBlog = blogListStart[0]
+  console.log(deleteBlog)
+
+  await api.delete(`/api/blogs/${deleteBlog.id}`).expect(204)
+  const blogListEnd = await helper.blogsInDb()
+  expect(blogListEnd).toHaveLength(helper.initialBlogs.length - 1)
+})
+
+test('updating the amout of likes', async () => {
+  const blogListStart = await helper.blogsInDb()
+  const updateBlog = {
+    'title': 'new blog',
+    'author': 'tram Nguyent thi vu',
+    'url': 'original.com',
+    'likes': '2222'
+  }
+  await api.put(`/api/blogs/${blogListStart[0].id}`)
+    .send(updateBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  const response = await api.get('/api/blogs')
+  const [likes] = response.body.map(r => r.likes)
+  expect(likes).toEqual(2222)
+})
 afterAll(() => {
   mongoose.connection.close()
 })
