@@ -5,7 +5,8 @@ const app = require('../app')
 const api = supertest(app)
 const helper = require('./test_helper')
 const Blog = require('../models/blogSchema')
-
+const bcrypt = require('bcrypt')
+const User = require('../models/userSchema')
 //makesure that database is the same before each test is run
 
 beforeEach(async () => {
@@ -101,6 +102,39 @@ test('updating the amout of likes', async () => {
   const response = await api.get('/api/blogs')
   const [likes] = response.body.map(r => r.likes)
   expect(likes).toEqual(2222)
+})
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'salainen',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
+  })
 })
 afterAll(() => {
   mongoose.connection.close()
