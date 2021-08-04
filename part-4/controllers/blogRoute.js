@@ -1,8 +1,9 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blogSchema')
+const User = require('../models/userSchema')
 
 blogRouter.get('/', async (request, response) => {
-  const notes = await Blog.find({})
+  const notes = await Blog.find({}).populate('user',{username: 1})
   response.json(notes)
 })
   
@@ -10,17 +11,19 @@ blogRouter.get('/', async (request, response) => {
 //need to change to async await 
 blogRouter.post('/', async (request, response, next) => {
   const body = request.body
-  // if (body.title === undefined || body.author === undefined  || body.url === undefined  ||body.likes === undefined) {
-  //   return response.status(400).json({ error: 'Need to fill all required fields' })
-  // }
+  console.log('body', body)
+  const user = await User.findById(body.userId)
   const blog = new Blog({
     title: body.title,
     url: body.url,
     likes: body.likes,
-    author: body.author
+    author: body.author,
+    user: user._id
   })
   try {
     const savedBlog = await blog.save()
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
     response.json(savedBlog)
   } catch (exception) {
     next(exception)
