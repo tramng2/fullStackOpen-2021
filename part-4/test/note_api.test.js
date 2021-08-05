@@ -107,10 +107,9 @@ test('updating the amout of likes', async () => {
 describe('when there is initially one user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
-
-    const passwordHash = await bcrypt.hash('sekret', 10)
+    const passwordHash = await bcrypt.hash('rootpassword', 10)
     const user = new User({ username: 'root', passwordHash })
-
+    console.log(passwordHash)
     await user.save()
   })
 

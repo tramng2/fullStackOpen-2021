@@ -1,18 +1,35 @@
+const jwt = require('jsonwebtoken')
 const blogRouter = require('express').Router()
 const Blog = require('../models/blogSchema')
 const User = require('../models/userSchema')
 
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+    return authorization.substring(7)
+  }
+  return null
+}
 blogRouter.get('/', async (request, response) => {
-  const notes = await Blog.find({}).populate('user',{username: 1})
-  response.json(notes)
+  const blogs = await Blog.find({}).populate('user', {username : 1, name: 1})
+  response.json(blogs)
 })
   
 
 //need to change to async await 
+// eslint-disable-next-line no-unused-vars
 blogRouter.post('/', async (request, response, next) => {
   const body = request.body
-  console.log('body', body)
-  const user = await User.findById(body.userId)
+  const token = getTokenFrom(request)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  console.log(decodedToken)
+
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+  const user = await User.findById(decodedToken.id)
+
+
   const blog = new Blog({
     title: body.title,
     url: body.url,
@@ -20,14 +37,14 @@ blogRouter.post('/', async (request, response, next) => {
     author: body.author,
     user: user._id
   })
-  try {
-    const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
-    response.json(savedBlog)
-  } catch (exception) {
-    next(exception)
-  }
+  const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+  response.json(savedBlog)
+  // try {
+  // } catch (exception) {
+  //   next(exception)
+  // }
 })
 
 blogRouter.get('/:id', async (request, response,next) => {
