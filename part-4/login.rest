@@ -1,21 +1,21 @@
-# POST http://localhost:3001/api/login
-# Content-Type: application/json
-
-# {
-#     "username": "root",
-#     "password": "rootpassword"
-# }
-
-POST http://localhost:3001/api/blogs
+POST http://localhost:3001/api/login
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYxMGJlMzkxYTc5MDhkMDhlOGVlNDdmYiIsImlhdCI6MTYyODE3MDgzNH0.hj_WEKO7kkU92qIR0wLErTINtXvSJ20INmO36ub8ukY
 
 {
-    "title": "authorization",
-    "author": "root",
-    "url": "rooot.com",
-    "likes": "11",
-    "userId": "610baf36751e4e02da940822"
+    "username": "root",
+    "password": "rootpassword"
 }
+
+# POST http://localhost:3001/api/blogs
+# Content-Type: application/json
+# Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYxMGJlMzkxYTc5MDhkMDhlOGVlNDdmYiIsImlhdCI6MTYyODIwMDEwMywiZXhwIjoxNjI4MjAzNzAzfQ.-m0FLWPinR-aL34dbeUpA1zvB4rjlMIZ-Ia4yjIlPJU
+
+# {
+#     "title": "4",
+#     "author": "root",
+#     "url": "rooot.com",
+#     "likes": "11",
+#     "userId": "610baf36751e4e02da940822"
+# }
 
 

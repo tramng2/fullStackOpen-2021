@@ -20,9 +20,8 @@ blogRouter.get('/', async (request, response) => {
 // eslint-disable-next-line no-unused-vars
 blogRouter.post('/', async (request, response, next) => {
   const body = request.body
-  const token = getTokenFrom(request)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  console.log(decodedToken)
+  const token = request.token
+  const decodedToken = request.decodedToken
 
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
