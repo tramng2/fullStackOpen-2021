@@ -23,24 +23,15 @@ beforeEach(async () => {
     passowrd: 'secret',
   }).save()
 
-  const userWithNoBlogs = await new User({
-    username: 'notRoot',
-    passowrd: 'aLittleLessSecret',
-  }).save()
-
   const userForToken = { username: rootUser.username, id: rootUser.id }
   token = jwt.sign(userForToken, process.env.SECRET)
-
-  const userWithNoBlogsToken = {
-    username: userWithNoBlogs.username,
-    id: userWithNoBlogs.id,
-  }
-  noBlogsToken = jwt.sign(userWithNoBlogsToken, process.env.SECRET)
-  await Blog.deleteMany({})
-  for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-  }
+  
+  await Promise.all(
+    helper.initialBlogs.map((blog) => {
+      blog.user = rootUser.id
+      return new Blog(blog).save()
+    })
+  )
 })
 test('get all blog by GET request', async () => {
   await api
@@ -111,7 +102,7 @@ test('deleting a single blog post', async () => {
   const deleteBlog = blogListStart[0]
 
   await api.delete(`/api/blogs/${deleteBlog.id}`).set('Authorization', `bearer ${token}`)
-    .expect(500)
+    .expect(204)
   const blogListEnd = await helper.blogsInDb()
   expect(blogListEnd).toHaveLength(helper.initialBlogs.length - 1)
 })
