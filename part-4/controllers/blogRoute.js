@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken')
 const blogRouter = require('express').Router()
 const Blog = require('../models/blogSchema')
 const User = require('../models/userSchema')
@@ -47,7 +46,7 @@ blogRouter.get('/:id', async (request, response,next) => {
 })
 
 
-blogRouter.delete('/:id', async (request, response, next) => {
+blogRouter.delete('/:id', async (request, response) => {
   if (!request.token || !request.decodedToken) {
     return response.status(401).json({ error: 'missing or invalid token' })
   }

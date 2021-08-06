@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 const helper = require('./test_helper')
@@ -9,7 +10,32 @@ const bcrypt = require('bcrypt')
 const User = require('../models/userSchema')
 //makesure that database is the same before each test is run
 
+let token
+let noBlogsToken
+
+// Test suite
 beforeEach(async () => {
+  await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  const rootUser = await new User({
+    username: 'root',
+    passowrd: 'secret',
+  }).save()
+
+  const userWithNoBlogs = await new User({
+    username: 'notRoot',
+    passowrd: 'aLittleLessSecret',
+  }).save()
+
+  const userForToken = { username: rootUser.username, id: rootUser.id }
+  token = jwt.sign(userForToken, process.env.SECRET)
+
+  const userWithNoBlogsToken = {
+    username: userWithNoBlogs.username,
+    id: userWithNoBlogs.id,
+  }
+  noBlogsToken = jwt.sign(userWithNoBlogsToken, process.env.SECRET)
   await Blog.deleteMany({})
   for (let blog of helper.initialBlogs) {
     let blogObject = new Blog(blog)
@@ -38,6 +64,7 @@ test('create a new blog post', async () => {
   await api
     .post('/api/blogs')
     .send(blog)
+    .set('Authorization', `bearer ${token}`)
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
@@ -55,6 +82,7 @@ test ('verify if likes property is missing', async () => {
   await api
     .post('/api/blogs')
     .send(blog)
+    .set('Authorization', `bearer ${token}`)
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
@@ -71,6 +99,7 @@ test('verify if title and url property is missing', async () => {
   await api
     .post('/api/blogs')
     .send(blog)
+    .set('Authorization', `bearer ${token}`)
     .expect(400)
 
   const response = await api.get('/api/blogs') 
@@ -80,9 +109,9 @@ test('verify if title and url property is missing', async () => {
 test('deleting a single blog post', async () => {
   const blogListStart = await helper.blogsInDb()
   const deleteBlog = blogListStart[0]
-  console.log(deleteBlog)
 
-  await api.delete(`/api/blogs/${deleteBlog.id}`).expect(204)
+  await api.delete(`/api/blogs/${deleteBlog.id}`).set('Authorization', `bearer ${token}`)
+    .expect(500)
   const blogListEnd = await helper.blogsInDb()
   expect(blogListEnd).toHaveLength(helper.initialBlogs.length - 1)
 })
