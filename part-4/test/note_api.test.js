@@ -11,7 +11,6 @@ const User = require('../models/userSchema')
 //makesure that database is the same before each test is run
 
 let token
-let noBlogsToken
 
 // Test suite
 beforeEach(async () => {
