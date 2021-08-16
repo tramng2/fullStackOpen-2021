@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import Blog from "./components/Blog";
 import blogsService from "./services/blogs";
 import loginService from "./services/login";
@@ -8,13 +8,12 @@ import LoginForm from "./components/LoginForm";
 import ToggleTable from "./components/ToggleTable";
 
 const App = () => {
-  const [inputBlog, setInputBlog] = useState({});
+  
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState({ type: "", content: "" });
-  const [componentVisible, setComponentVisible] = useState(false);
 
   useEffect(() => {
     blogsService.getAll().then((blogs) => setBlogs(blogs));
@@ -28,6 +27,8 @@ const App = () => {
       blogsService.setToken(user.token);
     }
   }, []);
+
+  const blogFormRef = useRef()
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -53,22 +54,12 @@ const App = () => {
     }
   };
 
-  const handleChange = (event) => {
-    setInputBlog({ ...inputBlog, [event.target.name]: event.target.value });
-  };
-  const addBlog = (event) => {
-    event.preventDefault();
-    const newBlog = {
-      title: inputBlog.title,
-      author: inputBlog.author,
-      url: inputBlog.url,
-      likes: inputBlog.likes,
-    };
+  const addBlog = (newBlog) => {
+    blogFormRef.current.toggleVisibility()
     blogsService.create(newBlog).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
-      setInputBlog("");
     });
-    event.target.reset();
+
     setMessage({ type: "noti", content: "new note added" });
     setTimeout(() => {
       setMessage({ type: "", content: "" });
@@ -80,11 +71,8 @@ const App = () => {
     setTimeout(() => {
       setMessage({ type: "", content: "" });
     }, 3000);
-
     window.localStorage.removeItem("loggedUser");
   };
-
-  // 
   return (
     <div>
       <h2>Blogs</h2>
@@ -102,11 +90,10 @@ const App = () => {
       ) : (
         <div>
           <h3>{user.username} logged in</h3>
-          <button onClick={logout}>Logout</button>
-          <ToggleTable buttonLable="Create new blog">
+          <button onClick={logout}>Log out</button>
+          <ToggleTable buttonLable="Create new blog" ref={blogFormRef}>
             <BlogForm 
-            addBlog={addBlog}
-            handleChange={handleChange}
+            createBlog={addBlog}
             blogs={blogs}
             />
           </ToggleTable>

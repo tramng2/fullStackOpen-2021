@@ -1,7 +1,23 @@
 import React, {useState} from 'react'
 
-function BlogForm({addBlog, handleChange, blogs}) {
-    
+function BlogForm({createBlog, blogs}) {
+  const [inputBlog, setInputBlog] = useState({});
+  const handleChange = (event) => {
+    setInputBlog({ ...inputBlog, [event.target.name]: event.target.value });
+  };
+
+  const addBlog = (event) => {
+    event.preventDefault();
+    const newBlog = {
+      title: inputBlog.title,
+      author: inputBlog.author,
+      url: inputBlog.url,
+      likes: inputBlog.likes,
+    };
+    createBlog(newBlog)
+    setInputBlog({})
+  }
+
     return (
       <div>
         <h2>Create a new blog</h2>
