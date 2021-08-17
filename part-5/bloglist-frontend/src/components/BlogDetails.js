@@ -1,7 +1,6 @@
-import React, { useState, useEffect} from "react";
-import blogsService from "../services/blogs";
+import React, { useState} from "react";
 
-function BlogDetails({ blog, handleAddLikes}) {
+function BlogDetails({ blog, handleAddLikes, handleDelete}) {
   const [content, setContent] = useState("view");
   const [visible, setVisible] = useState(false);
   const showWhenInVisible = { display: visible ? "" : "none" };
@@ -12,7 +11,6 @@ function BlogDetails({ blog, handleAddLikes}) {
     if (!visible) setContent("view");
   };
 
-  
   return (
     <div>
       {blog.title} {blog.author}
@@ -21,6 +19,7 @@ function BlogDetails({ blog, handleAddLikes}) {
         <p>{blog.url}</p>
         <span>{blog.likes}</span><button onClick={() => handleAddLikes(blog)}>like</button>
         <p>{blog.user ? blog.user.username: null}</p>
+        <button onClick={() => handleDelete(blog)} style={{display : blog.user ? "": "none"}}>remove</button>
       </div>
     </div>
   );

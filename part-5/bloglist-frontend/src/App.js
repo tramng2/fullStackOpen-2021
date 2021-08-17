@@ -62,15 +62,21 @@ const App = () => {
 
   const addBlog = (newBlog) => {
     blogFormRef.current.toggleVisibility();
-    blogsService.create(newBlog).then((returnedBlog) => {
+    blogsService.create(newBlog)
+    .then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
-    });
-
-    setMessage({ type: "noti", content: "new note added" });
+      setMessage({ type: "noti", content: "new note added" });
+    })
+    .catch((error) => setMessage({ type: "error", content: `invalid input ${error}` })) 
     setTimeout(() => {
       setMessage({ type: "", content: "" });
     }, 3000);
   };
+  const deleteBlog = (blog) => {
+    if(blog) {
+      window.confirm('Do you want to delete this blog?') && blogsService.deleteRequest(blog.id).then((blog) => blogsService.getAll().then((blogs) => setBlogs(blogs)))
+    }
+  }
   const logout = () => {
     setUser(null);
     setMessage({ type: "noti", content: "Log out" });
@@ -100,7 +106,7 @@ const App = () => {
           <ToggleTable buttonLable="Create new blog" ref={blogFormRef}>
             <BlogForm createBlog={addBlog} blogs={blogs} />
           </ToggleTable>
-          <Blog blogs={blogs} handleAddLikes={addLikes} handelSubmit={handleLogin} />
+          <Blog blogs={blogs} handleAddLikes={addLikes} handleDelete={deleteBlog} />
         </div>
       )}
     </div>
