@@ -1,12 +1,14 @@
 import React from "react";
 
 export default function LoginForm({
-    handleSubmit,
+  handleSubmit,
   username,
   handleUsernameChange,
   handlePasswordChange,
   password,
-}) {
+}) 
+
+{ 
   return (
     <div>
       <form onSubmit={handleSubmit}>

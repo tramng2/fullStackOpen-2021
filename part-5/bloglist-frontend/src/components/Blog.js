@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import BlogDetails from "./BlogDetails";
-const Blog = ({ blogs }) => {
+const Blog = ({ blogs,  handleAddLikes, handelSubmit}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -8,12 +8,11 @@ const Blog = ({ blogs }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
-
   return (
     <div>
       {blogs.map((blog) => (
         <div style={blogStyle} key={blog.id}>
-          <BlogDetails blog={blog}/>
+          <BlogDetails blog={blog} handleAddLikes={handleAddLikes}/>
         </div>
       ))}
     </div>

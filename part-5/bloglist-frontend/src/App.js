@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import blogsService from "./services/blogs";
 import loginService from "./services/login";
@@ -8,7 +8,6 @@ import LoginForm from "./components/LoginForm";
 import ToggleTable from "./components/ToggleTable";
 
 const App = () => {
-  
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,8 +27,15 @@ const App = () => {
     }
   }, []);
 
-  const blogFormRef = useRef()
+  const blogFormRef = useRef();
 
+  const addLikes = (blog) => {
+    if (blog) {
+      const newObject = blog;
+      newObject.likes++;
+      blogsService.update(blog.id, newObject).then((blog) => blogsService.getAll().then((blogs) => setBlogs(blogs)));
+    }
+  };
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -55,7 +61,7 @@ const App = () => {
   };
 
   const addBlog = (newBlog) => {
-    blogFormRef.current.toggleVisibility()
+    blogFormRef.current.toggleVisibility();
     blogsService.create(newBlog).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
     });
@@ -78,26 +84,23 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification message={message} />
       {user === null ? (
-       <ToggleTable buttonLable="login">
-         <LoginForm
+        <ToggleTable buttonLable="login">
+          <LoginForm
             username={username}
             password={password}
             handleUsernameChange={({ target }) => setUsername(target.value)}
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin}
           />
-       </ToggleTable>
+        </ToggleTable>
       ) : (
         <div>
           <h3>{user.username} logged in</h3>
           <button onClick={logout}>Log out</button>
           <ToggleTable buttonLable="Create new blog" ref={blogFormRef}>
-            <BlogForm 
-            createBlog={addBlog}
-            blogs={blogs}
-            />
+            <BlogForm createBlog={addBlog} blogs={blogs} />
           </ToggleTable>
-          <Blog blogs={blogs} />
+          <Blog blogs={blogs} handleAddLikes={addLikes} handelSubmit={handleLogin} />
         </div>
       )}
     </div>
