@@ -1,29 +1,31 @@
-import React, {useState, useImperativeHandle} from 'react'
+import React, { useState, useImperativeHandle } from 'react'
 
 const ToggleTable = React.forwardRef((props, ref) => {
-    const [visible, setVisible] = useState(false)
-    const hideWhenVisible = { display: visible ? "none" : "" };
-    const showWhenInVisible = { display: visible ? "" : "none" };
-    
-    const toggleVisibility = () => {
-        setVisible(!visible)
+  const [visible, setVisible] = useState(false)
+  const hideWhenVisible = { display: visible ? 'none' : '' }
+  const showWhenInVisible = { display: visible ? '' : 'none' }
+
+  const toggleVisibility = () => {
+    setVisible(!visible)
+  }
+  useImperativeHandle(ref, () => {
+    return {
+      toggleVisibility
     }
-    useImperativeHandle(ref, () => {
-        return {
-          toggleVisibility
-        }
-      })    
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={toggleVisibility}>{props.buttonLable}</button>
-        </div>
-        <div style={showWhenInVisible}>
-          {props.children}
-          <button onClick={toggleVisibility}>cancel</button>
-        </div>
+  })
+  return (
+    <div>
+      <div style={hideWhenVisible}>
+        <button onClick={toggleVisibility}>{props.buttonLable}</button>
       </div>
-    );
+      <div style={showWhenInVisible}>
+        {props.children}
+        <button onClick={toggleVisibility}>cancel</button>
+      </div>
+    </div>
+  )
 })
+
+ToggleTable.displayName = 'ToggleTable'
 
 export default ToggleTable
