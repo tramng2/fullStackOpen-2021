@@ -11,7 +11,7 @@ const Blog = ({ blogs, handleAddLikes, handleDelete }) => {
   return (
     <div>
       {blogs.map((blog) => (
-        <div style={blogStyle} key={blog.id}>
+        <div style={blogStyle} key={blog.id} >
           <BlogDetails blog={blog} handleAddLikes={handleAddLikes} handleDelete={handleDelete}/>
         </div>
       ))}

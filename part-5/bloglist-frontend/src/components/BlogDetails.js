@@ -7,15 +7,15 @@ function BlogDetails({ blog, handleAddLikes, handleDelete }) {
 
   const toggleContent = () => {
     setVisible(!visible)
-    if (visible) setContent('hide')
-    if (!visible) setContent('view')
+    visible ? setContent('view') : setContent('hide')
   }
-
   return (
     <div>
-      {blog.title} {blog.author}
+      <div className="blogInfo">
+        {blog.title} {blog.author}
+      </div>
       <button onClick={() => toggleContent()}>{content}</button>
-      <div style={showWhenInVisible}>
+      <div style={showWhenInVisible} className="blogInfoExpand">
         <p>{blog.url}</p>
         <span>{blog.likes}</span><button onClick={() => handleAddLikes(blog)}>like</button>
         <p>{blog.user ? blog.user.username: null}</p>

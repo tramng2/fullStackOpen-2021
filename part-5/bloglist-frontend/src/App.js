@@ -75,7 +75,7 @@ const App = () => {
   }
   const deleteBlog = (blog) => {
     if(blog) {
-      window.confirm('Do you want to delete this blog?') && blogsService.deleteRequest(blog.id).then((blog) => blogsService.getAll().then((blogs) => setBlogs(blogs)))
+      window.confirm('Do you want to delete this blog?') && blogsService.deleteRequest(blog.id).then(() => blogsService.getAll().then((blogs) => setBlogs(blogs)))
     }
   }
   const logout = () => {
