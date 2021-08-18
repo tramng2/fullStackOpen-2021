@@ -5,15 +5,24 @@ import BlogDetails from './BlogDetails'
 
 describe('check content rendered', () => {
   let component
+  const mockLikeHandler = jest.fn()
+
   beforeEach(() => {
+    const user = {
+      name: 'Test User',
+      username: 'testUsername',
+    }
     const blog = {
       author:'Tram Nguyen',
       title:'UXUI designer',
       url:'https://www.spellchecker.net/misspellings/automately',
-      likes:'12'
+      likes:'12',
+      user: {
+        username: 'testUsername',
+      }
     }
     component = render(
-      <BlogDetails blog={blog}  />
+      <BlogDetails blog={blog} user={user} handleAddLikes={mockLikeHandler} />
     )
   })
   test('renders authors and title', () => {
@@ -25,11 +34,18 @@ describe('check content rendered', () => {
     expect(blogInfoExpand).toHaveStyle('display: none')
   })
   test('url and likes are shown', () => {
-    const button = component.getByText('view')
-    fireEvent.click(button)
+    const buttonView = component.getByText('view')
+    fireEvent.click(buttonView)
     const div = component.container.querySelector('.blogInfoExpand')
-    component.debug()
     expect(div).not.toHaveStyle('display: none')
   })
+  test('press likes twice, props called twice', () => {
+    const buttonView = component.getByText('view')
+    fireEvent.click(buttonView)
+    const buttonLike= component.getByText('like')
 
+    fireEvent.click(buttonLike)
+    fireEvent.click(buttonLike)
+    expect(mockLikeHandler.mock.calls).toHaveLength(2)
+  })
 })
