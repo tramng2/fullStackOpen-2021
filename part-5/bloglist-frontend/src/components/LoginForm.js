@@ -16,6 +16,7 @@ export default function LoginForm({
           username
           <input
             type="text"
+            id="username"
             value={username}
             name="Username"
             onChange={handleUsernameChange}
@@ -26,12 +27,13 @@ export default function LoginForm({
           password
           <input
             type="password"
+            id="password"
             value={password}
             name="Password"
             onChange={handlePasswordChange}
           />
         </div>
-        <button type="submit">login</button>
+        <button type="submit" id="login-button">login</button>
       </form>
     </div>
   )
