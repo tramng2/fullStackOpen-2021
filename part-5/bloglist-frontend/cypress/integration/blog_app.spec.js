@@ -18,12 +18,23 @@ describe('Blog app', function() {
     })
     it('a new note can be created', function() {
       cy.contains('Create new blog').click()
-      cy.get('#title').type('a note created by cypress')
-      cy.get('#author').type('author created by cypress')
-      cy.get('#url').type('https://www.youtube.com/watch?v=fI9FM_unXaE')
-      cy.get('#likes').type('111')
-      cy.contains('add').click()
-      cy.contains('new note added')
+      cy.createBlog({ title: 'a blog created by cypress', author: 'author created by cypress', url:'https://www.youtube.com/watch?v=fI9FM_unXaE', like:'111' })
+      cy.contains('a blog created by cypress')
+    })
+    describe('and a blog exists', function () {
+      describe('and several notes exist', function () {
+        beforeEach(function () {
+          cy.createBlog({ title: 'add 1', author: 'author cypress', url:'https://www.youtube.com/watch?v=fI9FM_unXaE', like:'222' })
+          cy.createBlog({ title: 'add 2', author: 'author cypress', url:'https://www.youtube.com/watch?v=fI9FM_unXaE', like:'222' })
+        })
+
+        it.only('one of those can be click like', function () {
+          cy.contains('add 1').parent().find('button').as('theButton')
+          cy.get('@theButton').first().click()
+          cy.contains('add 1').parent().find('button').as('likeButon')
+          cy.get('@likeButon').contains('like').click()
+        })
+      })
     })
   })
 })
