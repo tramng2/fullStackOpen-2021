@@ -11,7 +11,7 @@ const Blog = ({ blogs, user, handleAddLikes, handleDelete }) => {
   return (
     <div>
       {blogs.map((blog) => (
-        <div style={blogStyle} key={blog.id} >
+        <div style={blogStyle} key={blog.id} data-cy="blogList" >
           <BlogDetails blog={blog} user={user} handleAddLikes={handleAddLikes} handleDelete={handleDelete}/>
         </div>
       ))}

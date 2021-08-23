@@ -18,7 +18,7 @@ function BlogDetails({ blog, user, handleAddLikes, handleDelete }) {
       <button onClick={() => toggleContent()}>{content}</button>
       <div style={showWhenInVisible} className="blogInfoExpand">
         <p>{blog.url}</p>
-        <span>{blog.likes}</span>
+        <span data-cy='likes'>{blog.likes}</span>
         <button className="like-btn" onClick={() => handleAddLikes(blog) }>like</button>
         <p>{blog.user ? blog.user.username: null}</p>
         <button onClick={() => handleDelete(blog)} style={{ display : blog.user.username === user.username? '': 'none' }}>remove</button>
