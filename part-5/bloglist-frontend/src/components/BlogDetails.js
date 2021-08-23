@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function BlogDetails({ blog, handleAddLikes, handleDelete }) {
+function BlogDetails({ blog, user, handleAddLikes, handleDelete }) {
   const [content, setContent] = useState('view')
   const [visible, setVisible] = useState(false)
   const showWhenInVisible = { display: visible ? '' : 'none' }
@@ -9,6 +9,7 @@ function BlogDetails({ blog, handleAddLikes, handleDelete }) {
     setVisible(!visible)
     visible ? setContent('view') : setContent('hide')
   }
+
   return (
     <div>
       <div className="blogInfo">
@@ -20,7 +21,7 @@ function BlogDetails({ blog, handleAddLikes, handleDelete }) {
         <span>{blog.likes}</span>
         <button className="like-btn" onClick={() => handleAddLikes(blog) }>like</button>
         <p>{blog.user ? blog.user.username: null}</p>
-        <button onClick={() => handleDelete(blog)} style={{ display : blog.user ? '': 'none' }}>remove</button>
+        <button onClick={() => handleDelete(blog)} style={{ display : blog.user.username === user.username? '': 'none' }}>remove</button>
       </div>
     </div>
   )

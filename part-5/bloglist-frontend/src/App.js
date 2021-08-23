@@ -107,7 +107,7 @@ const App = () => {
           <ToggleTable buttonLable="Create new blog" ref={blogFormRef}>
             <BlogForm createBlog={addBlog} blogs={blogs} />
           </ToggleTable>
-          <Blog blogs={blogs} handleAddLikes={addLikes} handleDelete={deleteBlog} />
+          <Blog blogs={blogs} user={user} handleAddLikes={addLikes} handleDelete={deleteBlog} />
         </div>
       )}
     </div>

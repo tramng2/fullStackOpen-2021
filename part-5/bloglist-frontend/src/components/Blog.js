@@ -1,6 +1,6 @@
 import React from 'react'
 import BlogDetails from './BlogDetails'
-const Blog = ({ blogs, handleAddLikes, handleDelete }) => {
+const Blog = ({ blogs, user, handleAddLikes, handleDelete }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -12,7 +12,7 @@ const Blog = ({ blogs, handleAddLikes, handleDelete }) => {
     <div>
       {blogs.map((blog) => (
         <div style={blogStyle} key={blog.id} >
-          <BlogDetails blog={blog} handleAddLikes={handleAddLikes} handleDelete={handleDelete}/>
+          <BlogDetails blog={blog} user={user} handleAddLikes={handleAddLikes} handleDelete={handleDelete}/>
         </div>
       ))}
     </div>
