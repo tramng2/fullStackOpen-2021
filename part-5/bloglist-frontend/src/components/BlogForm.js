@@ -34,6 +34,7 @@ function BlogForm({ createBlog }) {
             onChange={handleChange}
             value={inputBlog.title}
             name="title"
+            id="title"
           />
         </div>
         <div> author:
@@ -41,6 +42,7 @@ function BlogForm({ createBlog }) {
             onChange={handleChange}
             value={inputBlog.author}
             name="author"
+            id="author"
           />
         </div>
         <div> url:
@@ -48,6 +50,7 @@ function BlogForm({ createBlog }) {
             onChange={handleChange}
             value={inputBlog.url}
             name="url"
+            id="url"
           />
         </div>
         <div> likes:
@@ -55,6 +58,7 @@ function BlogForm({ createBlog }) {
             onChange={handleChange}
             value={inputBlog.likes}
             name="likes"
+            id="likes"
           />
         </div>
         <div>

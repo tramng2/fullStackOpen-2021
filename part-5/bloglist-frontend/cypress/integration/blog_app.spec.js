@@ -12,24 +12,18 @@ describe('Blog app', function() {
   it('Login form is shown', function() {
     cy.contains('login').click()
   })
-  describe('login', function() {
-    it('succeeds with correct credentials', function() {
-      cy.contains('login').click()
-      cy.get('#username').type('tram')
-      cy.get('#password').type('anhhaibede1994')
-      cy.get('#login-button').click()
-      cy.contains('tram logged in')
+  describe('when logged in ', function() {
+    beforeEach(function() {
+      cy.login({ username: 'tram', password: 'anhhaibede1994' })
     })
-    it.only('fails with wrong credentials', function() {
-      cy.contains('login').click()
-      cy.get('#username').type('tram')
-      cy.get('#password').type('wrong')
-      cy.get('#login-button').click()
-      cy.get('.error')
-        .should('contain', 'Username or Password is invalid')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
-        .and('have.css', 'border-style','solid')
-
+    it('a new note can be created', function() {
+      cy.contains('Create new blog').click()
+      cy.get('#title').type('a note created by cypress')
+      cy.get('#author').type('author created by cypress')
+      cy.get('#url').type('https://www.youtube.com/watch?v=fI9FM_unXaE')
+      cy.get('#likes').type('111')
+      cy.contains('add').click()
+      cy.contains('new note added')
     })
   })
 })
