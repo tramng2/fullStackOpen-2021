@@ -26,5 +26,10 @@ const counterReducer = (state = initialState, action) => {
       return state
   }
 }
+export const addGood = () => {
+  return {
+    type: 'GOOD'
+  }
+}
 
 export default counterReducer
