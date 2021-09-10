@@ -27,8 +27,7 @@ const reducer = (state = initialState, action) => {
     return state.map(anecdote => anecdote.id !== id ?  anecdote : anecdoteChanged) 
   }
   if (action.type === 'CREATE_NEW') {
-    console.log(action.data)
-    return state.push(action.data)
+    return state.concat(action.data)
   }
   return state
 }
