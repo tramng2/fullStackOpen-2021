@@ -18,7 +18,6 @@ const asObject = (anecdote) => {
 }
 
 const initialState = anecdotesAtStart.map(asObject)
-
 const reducer = (state = initialState, action) => {
   if(action.type === 'VOTE') {
     const id = action.data.id
