@@ -5,10 +5,10 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import { Provider } from 'react-redux'
 import App from './App'
 
-import anecdoteReducer from './reducers/anecdoteReducer'
+import anecdoteReducer, { initialState } from './reducers/anecdoteReducer'
 import notiReducer from './reducers/notificationReducer'
 import filterReducer from './reducers/filterReducer'
-
+import anecdotes from './services/anecdotesServices'
 
 const reducer = combineReducers ({
   anecdotes: anecdoteReducer,
