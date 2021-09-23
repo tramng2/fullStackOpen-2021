@@ -5,14 +5,11 @@ import AnecdoteForm from "./components/AnecdoteForm";
 import Filter from "./components/Filter";
 import Notification from "./components/Notification";
 import { initialState } from "./reducers/anecdoteReducer";
-import anecdotesServices from "./services/anecdotesServices";
 
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    anecdotesServices
-      .getAll()
-      .then((anecdotes) => dispatch(initialState(anecdotes)));
+     dispatch(initialState());
   }, [dispatch]);
   return (
     <div>
