@@ -16,8 +16,8 @@ function AnecdoteContent() {
   anecdotes.sort(function (a, b) {
     return b.votes - a.votes;
   });
-  const upVote = (id, content) => {
-    dispatch(addVote(id));
+  const upVote = (anecdote, content) => {
+    dispatch(addVote(anecdote));
     dispatch(voteNoti(content));
   };
   return (
@@ -28,7 +28,7 @@ function AnecdoteContent() {
           <div>
             {" "}
             has {anecdote.votes}{" "}
-            <button onClick={() => upVote(anecdote.id, anecdote.content)}>
+            <button onClick={() => upVote(anecdote, anecdote.content)}>
               vote
             </button>
           </div>
