@@ -6,7 +6,6 @@ const filterReducer = (state = initalState, action) => {
   return state;
 };
 export const filterChange = (input) => {
-    console.log('input')
   return {
     type: "FILTER",
     data: input,

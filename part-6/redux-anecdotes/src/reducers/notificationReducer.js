@@ -1,26 +1,24 @@
-const initialState = 'Notification'
-
-const notiReducer = (state = initialState, action) => {
-    if(action.type === "VOTE_NOTI") {
+const notiReducer = (state = '', action) => {
+    if(action.type === 'INIT_NOTI') {
         const message= action.message
         return state = message
     }
-    if(action.type === "ADD") {
+    if(action.type === 'NOTIFICATION') {
         const message= action.message
         return state = message
     }
     return state
 }
-export const voteNoti = (content) => {
+export const setNoti = (content) => {
     return {
-        type: 'VOTE_NOTI',
-        message: `You vote "${content}"`
+        type: 'NOTIFICATION',
+        message: content
     }
 }
-export const addNoti = (content) => {
+export const initNoti = () => {
     return {
-        type: 'ADD',
-        message: `${content}`
+        type: 'INIT_NOTI',
+        message: ''
     }
 }
 export default notiReducer

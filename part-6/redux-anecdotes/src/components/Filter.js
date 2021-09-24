@@ -11,7 +11,7 @@ function Filter() {
 
   return (
     <div>
-      <input onChange={handleFilter} />
+      <input onChange={handleFilter} placeholder="Search..."/>
     </div>
   );
 }

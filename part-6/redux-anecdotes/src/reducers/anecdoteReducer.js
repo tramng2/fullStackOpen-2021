@@ -33,7 +33,6 @@ export const initialState = () => {
 };
 export const addVote = (anecdote) => {
   return async (dispatch) => {
-    console.log('anecdote', anecdote)
     const anecdoteUpdated = { ...anecdote, votes: anecdote.votes + 1 };
     const updateDb = await anecdotesServices.updateVote(anecdoteUpdated);
     dispatch({
