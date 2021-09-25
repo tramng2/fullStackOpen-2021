@@ -1,16 +1,12 @@
 import React from "react";
 import { addVote } from "../reducers/anecdoteReducer";
-import { useDispatch, useSelector } from "react-redux";
 import { initNoti, setNoti } from "../reducers/notificationReducer";
 import { connect } from "react-redux";
 
-function AnecdoteContent({ anecdotes, addVote, setNoti, initNoti }) {
+function AnecdoteContent({ anecdotes, addVote, setNoti }) {
   const upVote = (anecdote, content) => {
     addVote(anecdote);
-    setNoti(`You voted dkmmm${content}`);
-    setTimeout(() => {
-      initNoti();
-    }, 1000);
+    setNoti(`You voted ${content}`, 5000);
   };
   return (
     <div>
