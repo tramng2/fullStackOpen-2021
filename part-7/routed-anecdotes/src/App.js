@@ -7,24 +7,6 @@ import {
   useParams
 } from 'react-router-dom'
 
-// const Menu = () => {
-//   const padding = {
-//     paddingRight: 5
-//   }
-//   return (
-//     <div>
-//       <a href='#' style={padding}>
-//         anecdotes
-//       </a>
-//       <a href='#' style={padding}>
-//         create new
-//       </a>
-//       <a href='#' style={padding}>
-//         about
-//       </a>
-//     </div>
-//   )
-// }
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
@@ -43,7 +25,7 @@ const Anecdote = ({ anecdotes }) => {
     <div>
       <h2>{anecdote.content}</h2>
       <p>has {anecdote.votes} votes</p>
-      <p>more information to see {anecdote.info} votes</p>
+      <p>more information to see: {anecdote.info}</p>
     </div>
   )
 }
@@ -97,11 +79,16 @@ const CreateNew = props => {
       info,
       votes: 0
     })
+    setContent('')
+    setAuthor('')
+    setInfo('')
+
   }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
+      <p>{props.notification}</p>
       <form onSubmit={handleSubmit}>
         <div>
           content
@@ -156,7 +143,12 @@ const App = () => {
   const addNew = anecdote => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote: " ${anecdote.content}" is created`)
+    setTimeout(() => {
+      setNotification('')
+    }, 10000)
   }
+  console.log('notification', notification)
 
   const anecdoteById = id => anecdotes.find(a => a.id === id)
 
@@ -202,7 +194,7 @@ const App = () => {
           <About />
         </Route>
         <Route path='/create'>
-          <CreateNew addNew={addNew} />
+          <CreateNew addNew={addNew} notification={notification}/>
         </Route>
       </Switch>
       <Footer />
