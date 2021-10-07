@@ -19,7 +19,6 @@ export default function LoginForm({
           />
         </div>
         <div>
-          {' '}
           password
           <input
             type={password.type}

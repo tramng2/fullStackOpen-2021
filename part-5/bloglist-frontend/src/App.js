@@ -11,8 +11,6 @@ import { useField } from './custom_hooks/hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  // const [username, setUsername] = useState('')
-  // const [password, setPassword] = useState('')
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
