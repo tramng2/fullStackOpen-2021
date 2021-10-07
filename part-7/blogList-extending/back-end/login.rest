@@ -1,0 +1,21 @@
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "rootpassword"
+}
+
+# POST http://localhost:3001/api/blogs
+# Content-Type: application/json
+# Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYxMGQ2MGYxYjEzOTM2MmQ3ZDExZTA3YiIsImlhdCI6MTYyODI2ODI2NCwiZXhwIjoxNjI4MjcxODY0fQ.8xUJtg08FoSWQSxK4oeNmFzd3NH2mCwY88_2QY_nJpM
+
+# {
+#     "title": "4",
+#     "author": "root",
+#     "url": "rooot.com",
+#     "likes": "11",
+#     "userId": "610baf36751e4e02da940822"
+# }
+
+
