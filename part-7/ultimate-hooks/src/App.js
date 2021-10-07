@@ -17,7 +17,6 @@ const useField = type => {
 
 const useResource = baseUrl => {
   const [resources, setResources] = useState([])
-console.log(resources)
   useEffect(() => {
     const fetchData = async () => {
       await axios.get(baseUrl).then(response => setResources(response.data))
