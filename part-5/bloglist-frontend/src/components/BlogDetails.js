@@ -20,8 +20,8 @@ function BlogDetails({ blog, user, handleAddLikes, handleDelete }) {
         <p>{blog.url}</p>
         <span data-cy='likes'>{blog.likes}</span>
         <button className="like-btn" onClick={() => handleAddLikes(blog) }>like</button>
-        <p>{blog.user ? blog.user.username: null}</p>
-        <button onClick={() => handleDelete(blog)} style={{ display : blog.user.username === user.username? '': 'none' }}>remove</button>
+        <p>{blog.user ? blog.user.username: 'null' }</p>
+        <button onClick={() => handleDelete(blog)} style={{ display : blog.user ? (blog.user.username  === user.username ? '': 'none') : 'none' }}>remove</button>
       </div>
     </div>
   )

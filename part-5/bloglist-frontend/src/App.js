@@ -7,14 +7,16 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import ToggleTable from './components/ToggleTable'
 import PropTypes from 'prop-types'
+import { useField } from './custom_hooks/hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  // const [username, setUsername] = useState('')
+  // const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState({ type: '', content: '' })
-
   useEffect(() => {
     blogsService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
@@ -41,14 +43,11 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username,
-        password,
+        username: username.value, password: password.value
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogsService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
       setMessage({ type: 'noti', content: 'Logged' })
       setTimeout(() => {
         setMessage({ type: '', content: '' })
@@ -95,8 +94,6 @@ const App = () => {
           <LoginForm
             username={username}
             password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin}
           />
         </ToggleTable>
