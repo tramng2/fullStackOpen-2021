@@ -9,14 +9,20 @@ import ToggleTable from './components/ToggleTable'
 import PropTypes from 'prop-types'
 import { useField } from './custom_hooks/hooks'
 
+import { useDispatch } from 'react-redux'
+import { initNoti, setNoti } from '../src/reducers/notiReducer'
+
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState({ type: '', content: '' })
+
+
   useEffect(() => {
-    blogsService.getAll().then((blogs) => setBlogs(blogs))
+    blogsService.getAll().then(blogs => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -30,65 +36,74 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const addLikes = (blog) => {
+  const addLikes = blog => {
     if (blog) {
       const newObject = blog
       newObject.likes++
-      blogsService.update(blog.id, newObject).then(() => blogsService.getAll().then((blogs) => setBlogs(blogs)))
+      blogsService
+        .update(blog.id, newObject)
+        .then(() => blogsService.getAll().then(blogs => setBlogs(blogs)))
     }
   }
-  const handleLogin = async (event) => {
+  const handleLogin = async event => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username: username.value, password: password.value
+        username: username.value,
+        password: password.value
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogsService.setToken(user.token)
       setUser(user)
-      setMessage({ type: 'noti', content: 'Logged' })
+      dispatch(setNoti('Logged','noti', 3000))
       setTimeout(() => {
-        setMessage({ type: '', content: '' })
-      }, 3000)
+        dispatch(initNoti())
+      }, 2000)
     } catch (exception) {
-      setMessage({ type: 'error', content: 'Username or Password is invalid' })
+      dispatch(setNoti('Error dkm','error',3000))
       setTimeout(() => {
-        setMessage({ type: '', content: '' })
+        dispatch(initNoti())
       }, 3000)
     }
   }
 
-  const addBlog = (newBlog) => {
+  const addBlog = newBlog => {
     blogFormRef.current.toggleVisibility()
-    blogsService.create(newBlog)
-      .then((returnedBlog) => {
+    blogsService
+      .create(newBlog)
+      .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setMessage({ type: 'noti', content: 'new note added' })
+        dispatch(setNoti('New note added','noti', 3000))
+
       })
-      .catch((error) => setMessage({ type: 'error', content: `invalid input ${error}` }))
-    setTimeout(() => {
-      setMessage({ type: '', content: '' })
-    }, 3000)
+      .catch(error =>
+        dispatch(setNoti(`invalid input ${error}`,'error',3000))
+      )
+      setTimeout(() => {
+        dispatch(initNoti())
+      }, 3000)
   }
-  const deleteBlog = (blog) => {
-    if(blog) {
-      window.confirm('Do you want to delete this blog?') && blogsService.deleteRequest(blog.id).then(() => blogsService.getAll().then((blogs) => setBlogs(blogs)))
+  const deleteBlog = blog => {
+    if (blog) {
+      window.confirm('Do you want to delete this blog?') &&
+        blogsService
+          .deleteRequest(blog.id)
+          .then(() => blogsService.getAll().then(blogs => setBlogs(blogs)))
     }
   }
   const logout = () => {
     setUser(null)
-    setMessage({ type: 'noti', content: 'Log out' })
-    setTimeout(() => {
-      setMessage({ type: '', content: '' })
-    }, 3000)
+    // setTimeout(() => {
+    //   setMessage({ type: '', content: '' })
+    // }, 3000)
     window.localStorage.removeItem('loggedUser')
   }
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification message={message} />
+      <Notification/>
       {user === null ? (
-        <ToggleTable buttonLable="login">
+        <ToggleTable buttonLable='login'>
           <LoginForm
             username={username}
             password={password}
@@ -99,10 +114,15 @@ const App = () => {
         <div>
           <h3>{user.username} logged in</h3>
           <button onClick={logout}>Log out</button>
-          <ToggleTable buttonLable="Create new blog" ref={blogFormRef}>
+          <ToggleTable buttonLable='Create new blog' ref={blogFormRef}>
             <BlogForm createBlog={addBlog} blogs={blogs} />
           </ToggleTable>
-          <Blog blogs={blogs} user={user} handleAddLikes={addLikes} handleDelete={deleteBlog} />
+          <Blog
+            blogs={blogs}
+            user={user}
+            handleAddLikes={addLikes}
+            handleDelete={deleteBlog}
+          />
         </div>
       )}
     </div>
