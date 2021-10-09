@@ -9,21 +9,21 @@ import ToggleTable from './components/ToggleTable'
 import PropTypes from 'prop-types'
 import { useField } from './custom_hooks/hooks'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { initNoti, setNoti } from '../src/reducers/notiReducer'
+import { initBlogs } from './reducers/blogReducer'
 
-const App = () => {
+const App = ({blogsinit}) => {
   const dispatch = useDispatch()
-
   const [blogs, setBlogs] = useState([])
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
-
-
   useEffect(() => {
-    blogsService.getAll().then(blogs => setBlogs(blogs))
-  }, [])
+    // blogsService.getAll().then(blogs => setBlogs(blogs))
+    dispatch(initBlogs())
+  }, [dispatch])
+
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -55,12 +55,12 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogsService.setToken(user.token)
       setUser(user)
-      dispatch(setNoti('Logged','noti', 3000))
+      dispatch(setNoti('Logged', 'noti', 3000))
       setTimeout(() => {
         dispatch(initNoti())
       }, 2000)
     } catch (exception) {
-      dispatch(setNoti('Error dkm','error',3000))
+      dispatch(setNoti('Error dkm', 'error', 3000))
       setTimeout(() => {
         dispatch(initNoti())
       }, 3000)
@@ -73,15 +73,14 @@ const App = () => {
       .create(newBlog)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        dispatch(setNoti('New note added','noti', 3000))
-
+        dispatch(setNoti('New note added', 'noti', 3000))
       })
       .catch(error =>
-        dispatch(setNoti(`invalid input ${error}`,'error',3000))
+        dispatch(setNoti(`invalid input ${error}`, 'error', 3000))
       )
-      setTimeout(() => {
-        dispatch(initNoti())
-      }, 3000)
+    setTimeout(() => {
+      dispatch(initNoti())
+    }, 3000)
   }
   const deleteBlog = blog => {
     if (blog) {
@@ -93,15 +92,13 @@ const App = () => {
   }
   const logout = () => {
     setUser(null)
-    // setTimeout(() => {
-    //   setMessage({ type: '', content: '' })
-    // }, 3000)
+    dispatch(setNoti('Log out', 'noti', 3000))
     window.localStorage.removeItem('loggedUser')
   }
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification/>
+      <Notification />
       {user === null ? (
         <ToggleTable buttonLable='login'>
           <LoginForm
