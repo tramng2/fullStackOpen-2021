@@ -1,68 +1,42 @@
-import React, { useState } from 'react'
-
-function BlogForm({ createBlog }) {
-  const [inputBlog, setInputBlog] = useState({ title: '',
-    author: '',
-    url: '',
-    likes: '' })
-  const handleChange = (event) => {
-    setInputBlog({ ...inputBlog, [event.target.name]: event.target.value })
-  }
-
-  const handleSumbitBlog = (event) => {
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setNoti } from '../reducers/notiReducer'
+import { createBlog } from '../reducers/blogReducer'
+function BlogForm () {
+  const dispatch = useDispatch()
+  const createNewBlog = async event => {
     event.preventDefault()
-    const newBlog = {
-      title: inputBlog.title,
-      author: inputBlog.author,
-      url: inputBlog.url,
-      likes: inputBlog.likes,
+    const content = {
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value,
+      likes: event.target.likes.value
     }
-    createBlog(newBlog)
-    setInputBlog({ title: '',
-      author: '',
-      url: '',
-      likes: '' })
+    dispatch(createBlog(content))
+    dispatch(setNoti('New blog was added', 'noti', 3000))
   }
-
   return (
     <div>
       <h2>Create a new blog</h2>
-      <form onSubmit={handleSumbitBlog}>
-
-        <div> title:
-          <input
-            onChange={handleChange}
-            value={inputBlog.title}
-            name="title"
-            id="title"
-          />
-        </div>
-        <div> author:
-          <input
-            onChange={handleChange}
-            value={inputBlog.author}
-            name="author"
-            id="author"
-          />
-        </div>
-        <div> url:
-          <input
-            onChange={handleChange}
-            value={inputBlog.url}
-            name="url"
-            id="url"
-          />
-        </div>
-        <div> likes:
-          <input
-            onChange={handleChange}
-            value={inputBlog.likes}
-            name="likes"
-            id="likes"
-          />
+      <form onSubmit={createNewBlog}>
+        <div>
+          title:
+          <input name='title' />
         </div>
         <div>
-          <button type="submit">add</button>
+          author:
+          <input name='author' />
+        </div>
+        <div>
+          url:
+          <input name='url' id='url' />
+        </div>
+        <div>
+          likes:
+          <input name='likes' />
+        </div>
+        <div>
+          <button type='submit'>add</button>
         </div>
       </form>
     </div>

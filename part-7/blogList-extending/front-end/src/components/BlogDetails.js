@@ -1,13 +1,22 @@
 import React, { useState } from 'react'
+import { useDispatch} from 'react-redux'
+import { addLike, deleteBlog } from '../reducers/blogReducer'
 
-function BlogDetails({ blog, user, handleAddLikes, handleDelete }) {
+function BlogDetails({ blog, user }) {
   const [content, setContent] = useState('view')
   const [visible, setVisible] = useState(false)
   const showWhenInVisible = { display: visible ? '' : 'none' }
+  const dispatch = useDispatch()
 
   const toggleContent = () => {
     setVisible(!visible)
     visible ? setContent('view') : setContent('hide')
+  }
+  const handleLike = () => {
+    dispatch(addLike(blog))
+  }
+  const handleDelete = (blog) => {
+    dispatch(deleteBlog(blog))
   }
 
   return (
@@ -19,7 +28,7 @@ function BlogDetails({ blog, user, handleAddLikes, handleDelete }) {
       <div style={showWhenInVisible} className="blogInfoExpand">
         <p>{blog.url}</p>
         <span data-cy='likes'>{blog.likes}</span>
-        <button className="like-btn" onClick={() => handleAddLikes(blog) }>like</button>
+        <button className="like-btn" onClick={() => handleLike(blog) }>like</button>
         <p>{blog.user ? blog.user.username: 'null' }</p>
         <button onClick={() => handleDelete(blog)} style={{ display : blog.user ? (blog.user.username  === user.username ? '': 'none') : 'none' }}>remove</button>
       </div>

@@ -1,6 +1,8 @@
 import React from 'react'
 import BlogDetails from './BlogDetails'
-const Blog = ({ blogs, user, handleAddLikes, handleDelete }) => {
+import { useSelector} from 'react-redux'
+const Blog = ({ user }) => {
+  const blogs = useSelector(state => state.blogs)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -12,7 +14,7 @@ const Blog = ({ blogs, user, handleAddLikes, handleDelete }) => {
     <div>
       {blogs.map((blog) => (
         <div style={blogStyle} key={blog.id} data-cy="blogList" >
-          <BlogDetails blog={blog} user={user} handleAddLikes={handleAddLikes} handleDelete={handleDelete}/>
+          <BlogDetails blog={blog} user={user}/>
         </div>
       ))}
     </div>

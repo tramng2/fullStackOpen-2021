@@ -9,21 +9,19 @@ import ToggleTable from './components/ToggleTable'
 import PropTypes from 'prop-types'
 import { useField } from './custom_hooks/hooks'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { initNoti, setNoti } from '../src/reducers/notiReducer'
 import { initBlogs } from './reducers/blogReducer'
 
 const App = ({blogsinit}) => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
+
   useEffect(() => {
-    // blogsService.getAll().then(blogs => setBlogs(blogs))
     dispatch(initBlogs())
   }, [dispatch])
-
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -36,15 +34,6 @@ const App = ({blogsinit}) => {
 
   const blogFormRef = useRef()
 
-  const addLikes = blog => {
-    if (blog) {
-      const newObject = blog
-      newObject.likes++
-      blogsService
-        .update(blog.id, newObject)
-        .then(() => blogsService.getAll().then(blogs => setBlogs(blogs)))
-    }
-  }
   const handleLogin = async event => {
     event.preventDefault()
     try {
@@ -67,29 +56,6 @@ const App = ({blogsinit}) => {
     }
   }
 
-  const addBlog = newBlog => {
-    blogFormRef.current.toggleVisibility()
-    blogsService
-      .create(newBlog)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        dispatch(setNoti('New note added', 'noti', 3000))
-      })
-      .catch(error =>
-        dispatch(setNoti(`invalid input ${error}`, 'error', 3000))
-      )
-    setTimeout(() => {
-      dispatch(initNoti())
-    }, 3000)
-  }
-  const deleteBlog = blog => {
-    if (blog) {
-      window.confirm('Do you want to delete this blog?') &&
-        blogsService
-          .deleteRequest(blog.id)
-          .then(() => blogsService.getAll().then(blogs => setBlogs(blogs)))
-    }
-  }
   const logout = () => {
     setUser(null)
     dispatch(setNoti('Log out', 'noti', 3000))
@@ -112,13 +78,10 @@ const App = ({blogsinit}) => {
           <h3>{user.username} logged in</h3>
           <button onClick={logout}>Log out</button>
           <ToggleTable buttonLable='Create new blog' ref={blogFormRef}>
-            <BlogForm createBlog={addBlog} blogs={blogs} />
+            <BlogForm />
           </ToggleTable>
           <Blog
-            blogs={blogs}
             user={user}
-            handleAddLikes={addLikes}
-            handleDelete={deleteBlog}
           />
         </div>
       )}

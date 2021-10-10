@@ -7,7 +7,7 @@ import blogReducer from './reducers/blogReducer'
 
 const reducer = combineReducers ({
   noti: notiReducer,
-  blogsinit: blogReducer
+  blogs: blogReducer
 })
 
 
