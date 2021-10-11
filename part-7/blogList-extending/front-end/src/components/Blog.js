@@ -1,7 +1,8 @@
 import React from 'react'
 import BlogDetails from './BlogDetails'
 import { useSelector} from 'react-redux'
-const Blog = ({ user }) => {
+
+const Blog = ({user}) => {
   const blogs = useSelector(state => state.blogs)
   const blogStyle = {
     paddingTop: 10,

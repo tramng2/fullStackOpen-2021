@@ -1,13 +1,13 @@
 import loginService from '../services/login'
-
 import blogService from '../services/blogs'
-const loginReducer = (state = [], action) => {
+import { setNoti } from './notiReducer'
+
+const loginReducer = (state = null, action) => {
   switch (action.type) {
     case 'LOGIN':
-      return action.data
-    case 'LOGOUT': {
+      return (state = action.data)
+    case 'LOGOUT':
       return null
-    }
     default:
       return state
   }
@@ -15,22 +15,31 @@ const loginReducer = (state = [], action) => {
 
 export const login = userInfo => {
   return async dispatch => {
-    const user = await loginService.login({
-      username: userInfo.username,
-      password: userInfo.password
-    })
-    window.localStorage.setItem('loggedUser', JSON.stringify(user))
-    blogService.setToken(user.token)
-    dispatch({
-      type: 'LOGIN',
-      data: user
-    })
+    try {
+      const userLogin = await loginService.login({
+        username: userInfo.username,
+        password: userInfo.password
+      })
+      window.localStorage.setItem('loggedUser', JSON.stringify(userLogin))
+      blogService.setToken(userLogin.token)
+      dispatch(setNoti('Log in', 'noti', 3000))
+      dispatch({
+        type: 'LOGIN',
+        data: userLogin
+      })
+    } catch (error) {
+      dispatch(setNoti('Wrong password or username', 'error', 3000))
+    }
   }
 }
 
 export const logout = () => {
-  return {
-    type: 'LOGOUT'
+  return async dispatch => {
+    window.localStorage.removeItem('loggedUser')
+    dispatch({
+      type: 'LOGOUT',
+      user: null
+    })
   }
 }
 

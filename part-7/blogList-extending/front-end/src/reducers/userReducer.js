@@ -7,9 +7,8 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'INIT_USERS':
       return action.data
-    case 'SET_USER':
-        console.log(action.data)
-      return action.data
+    // case 'SET_USER':
+    //   return action.data
     default:
       return state
   }
@@ -24,8 +23,8 @@ export const initUsers = () => {
     })
   }
 }
-export const setUser = user => ({
-  type: 'SET_USER',
-  data: user
-})
+// export const setUser = user => ({
+//   type: 'SET_USER',
+//   data: user
+// })
 export default userReducer

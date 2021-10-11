@@ -10,32 +10,39 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { initNoti, setNoti } from '../src/reducers/notiReducer'
 import { initBlogs } from './reducers/blogReducer'
-import { setUser } from './reducers/userReducer'
+import { initUsers } from './reducers/userReducer'
+import { login, logout } from './reducers/loginReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const userLoginInfo = useSelector(state => state.login)
-  const user = useSelector(state => state.user)
+  const userLocalStore = useSelector(state => state.user)
+  let user
+  if (userLocalStore) {
+    user = userLocalStore
+  } else {
+    user = userLoginInfo
+  }
+
   useEffect(() => {
     dispatch(initBlogs())
   }, [dispatch])
 
+  const loggedUserJSON = window.localStorage.getItem('loggedUser')
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      blogService.setToken(user.token)
-      dispatch(setUser(user))
+      const userLocal = JSON.parse(loggedUserJSON)
+      blogService.setToken(userLocal.token)
     }
-  }, [dispatch])
+  }, [loggedUserJSON])
 
-  const blogFormRef = useRef()
-
-  const logout = () => {
-    // setUser(null)
+  const handleLogout = async event => {
+    event.preventDefault()
     dispatch(setNoti('Log out', 'noti', 3000))
-    window.localStorage.removeItem('loggedUser')
+    dispatch(logout())
+    // dispatch(setUser(null))
   }
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -47,11 +54,11 @@ const App = () => {
       ) : (
         <div>
           <h3>{user.username} logged in</h3>
-          <button onClick={logout}>Log out</button>
-          <ToggleTable buttonLable='Create new blog' ref={blogFormRef}>
+          <button onClick={handleLogout}>Log out</button>
+          <ToggleTable buttonLable='Create new blog'>
             <BlogForm />
           </ToggleTable>
-          <Blog user={userLoginInfo} />
+          <Blog user={user}/>
         </div>
       )}
     </div>

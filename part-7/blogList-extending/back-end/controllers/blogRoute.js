@@ -8,7 +8,6 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', async (request, response, next) => {
-  console.log('backend', request)
   const body = request.body
   const token = request.token
   const decodedToken = request.decodedToken
