@@ -42,6 +42,7 @@ export const addLike = blog => {
 }
 
 export const createBlog = blog => {
+  console.log(blog)
   return async dispatch => {
     await blogsService.create(blog)
     const newBlog =  await blogsService.getAll()

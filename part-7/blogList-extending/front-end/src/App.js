@@ -1,24 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
-import blogsService from './services/blogs'
-import loginService from './services/login'
+import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import ToggleTable from './components/ToggleTable'
 import PropTypes from 'prop-types'
-import { useField } from './custom_hooks/hooks'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { initNoti, setNoti } from '../src/reducers/notiReducer'
 import { initBlogs } from './reducers/blogReducer'
+import { setUser } from './reducers/userReducer'
 
-const App = ({blogsinit}) => {
+const App = () => {
   const dispatch = useDispatch()
-  const username = useField('text')
-  const password = useField('password')
-  const [user, setUser] = useState(null)
-
+  const userLoginInfo = useSelector(state => state.login)
+  const user = useSelector(state => state.user)
   useEffect(() => {
     dispatch(initBlogs())
   }, [dispatch])
@@ -27,37 +24,15 @@ const App = ({blogsinit}) => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogsService.setToken(user.token)
+      blogService.setToken(user.token)
+      dispatch(setUser(user))
     }
-  }, [])
+  }, [dispatch])
 
   const blogFormRef = useRef()
 
-  const handleLogin = async event => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username: username.value,
-        password: password.value
-      })
-      window.localStorage.setItem('loggedUser', JSON.stringify(user))
-      blogsService.setToken(user.token)
-      setUser(user)
-      dispatch(setNoti('Logged', 'noti', 3000))
-      setTimeout(() => {
-        dispatch(initNoti())
-      }, 2000)
-    } catch (exception) {
-      dispatch(setNoti('Error dkm', 'error', 3000))
-      setTimeout(() => {
-        dispatch(initNoti())
-      }, 3000)
-    }
-  }
-
   const logout = () => {
-    setUser(null)
+    // setUser(null)
     dispatch(setNoti('Log out', 'noti', 3000))
     window.localStorage.removeItem('loggedUser')
   }
@@ -67,11 +42,7 @@ const App = ({blogsinit}) => {
       <Notification />
       {user === null ? (
         <ToggleTable buttonLable='login'>
-          <LoginForm
-            username={username}
-            password={password}
-            handleSubmit={handleLogin}
-          />
+          <LoginForm />
         </ToggleTable>
       ) : (
         <div>
@@ -80,9 +51,7 @@ const App = ({blogsinit}) => {
           <ToggleTable buttonLable='Create new blog' ref={blogFormRef}>
             <BlogForm />
           </ToggleTable>
-          <Blog
-            user={user}
-          />
+          <Blog user={userLoginInfo} />
         </div>
       )}
     </div>
